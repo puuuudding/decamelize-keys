@@ -2,11 +2,11 @@
 	"_id": "58ca523329b7997ab7b741a2",
 	"index": 0,
 	"guid": "e58a19f6-5dc3-45a6-bf57-2db5d32171d6",
-	"is_active": false,
+	"isActive": false,
 	"balance": "$3,245.09",
 	"picture": "https://placehold.it/32x32",
 	"age": 21,
-	"eye_color": "blue",
+	"eyeColor": "blue",
 	"name": "Murphy Rivers",
 	"gender": "male",
 	"company": "OVOLO",
@@ -41,5 +41,5 @@
 		}
 	],
 	"greeting": "Hello, Murphy Rivers! You have 8 unread messages.",
-	"favorite_fruit": "banana"
+	"favoriteFruit": "banana"
 }

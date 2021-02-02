@@ -1,14 +1,12 @@
 {
-	"name": "camelcase-keys",
+	"name": "@puuuudding/decamelize-keys",
 	"version": "6.2.2",
-	"description": "Convert object keys to camel case",
+	"description": "Convert object keys to lowercased one",
 	"license": "MIT",
-	"repository": "sindresorhus/camelcase-keys",
-	"funding": "https://github.com/sponsors/sindresorhus",
+	"repository": "puuuudding/decamelize-keys",
 	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "https://sindresorhus.com"
+		"name": "Sean J. Bao",
+		"email": "meow@puuuudding.com"
 	},
 	"engines": {
 		"node": ">=10"
@@ -31,8 +29,10 @@
 		"values",
 		"val",
 		"iterate",
-		"camelcase",
-		"camel-case",
+		"decamelize",
+		"decamelcase",
+		"lowercase",
+	  	"snake",
 		"camel",
 		"case",
 		"dash",
@@ -43,8 +43,6 @@
 		"string",
 		"text",
 		"convert",
-		"pascalcase",
-		"pascal-case",
 		"deep",
 		"recurse",
 		"recursive"

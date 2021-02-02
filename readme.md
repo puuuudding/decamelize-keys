@@ -1,56 +1,45 @@
-# camelcase-keys
+# decamelize-keys
 
-> Convert object keys to camel case using [`camelcase`](https://github.com/sindresorhus/camelcase)
+This project was forked from [`camelcase-keys`](https://github.com/sindresorhus/camelcase-keys) and converted to do the opposite. This project will keep updated with `camelcase-keys`.
+
+> Convert object keys to lowercased one using [`decamelize`](https://github.com/sindresorhus/decamelize).
 
 ## Install
 
 ```
-$ npm install camelcase-keys
+$ npm install @puuuudding/decamelize-keys
 ```
 
 ## Usage
 
 ```js
-const camelcaseKeys = require('camelcase-keys');
+const decamelizeKeys = require('decamelize-keys');
 
 // Convert an object
-camelcaseKeys({'foo-bar': true});
-//=> {fooBar: true}
+decamelizeKeys({fooBar: true});
+//=> {'foo_bar': true}
 
 // Convert an array of objects
-camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
-//=> [{fooBar: true}, {barFoo: false}]
+decamelizeKeys([{fooBar: true}, {barFoo: false}]);
+//=> [{'foo_bar': true}, {'bar_foo': false}]
 
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
-//=> {fooBar: true, nested: {unicornRainbow: true}}
+decamelizeKeys({fooBar: true, nested: {unicornRainbow: true}}, {deep: true});
+//=> {'foo_bar': true, nested: {'unicorn_rainbow': true}}
 
-camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
-//=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
-
-// Convert object keys to pascal case
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
-//=> {FooBar: true, Nested: {UnicornRainbow: true}}
-```
-
-```js
-const camelcaseKeys = require('camelcase-keys');
-
-const argv = require('minimist')(process.argv.slice(2));
-//=> {_: [], 'foo-bar': true}
-
-camelcaseKeys(argv);
-//=> {_: [], fooBar: true}
+// Use custom separator
+decamelizeKeys({fooBar: true, nested: {unicornRainbow: true}}, {deep: true, separator: '-'});
+//=> {'foo-bar': true, nested: {'unicorn-rainbow': true}}
 ```
 
 ## API
 
-### camelcaseKeys(input, options?)
+### decamelizeKeys(input, options?)
 
 #### input
 
 Type: `object | object[]`
 
-An object or array of objects to camel-case.
+An object or array of objects to decamelize.
 
 #### options
 
@@ -68,30 +57,30 @@ Exclude keys from being camel-cased.
 Type: `string[]`\
 Default: `[]`
 
-Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
+Exclude children at the given object paths in dot-notation from being decamelize. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
 
 ```js
-camelcaseKeys({
-	a_b: 1,
-	a_c: {
-		c_d: 1,
-		c_e: {
-			e_f: 1
+decamelizeKeys({
+	aB: 1,
+	aC: {
+		cD: 1,
+		cE: {
+			eF: 1
 		}
 	}
 }, {
 	deep: true,
 	stopPaths: [
-		'a_c.c_e'
+		'aC.cE'
 	]
-}),
+})
 /*
 {
-	aB: 1,
-	aC: {
-		cD: 1,
-		cE: {
-			e_f: 1
+	a_b: 1,
+	a_c: {
+		c_d: 1,
+		c_e: {
+			eF: 1
 		}
 	}
 }
@@ -105,21 +94,39 @@ Default: `false`
 
 Recurse nested objects and objects in arrays.
 
-##### pascalCase
+##### separator
+
+Type: `string`\
+Default: `'_'`
+
+Character or string inserted to separate words in key.
+
+```js
+const decamelize = require('decamelize');
+
+decamelize('unicornRainbow');
+//=> 'unicorn_rainbow'
+
+decamelize('unicornRainbow', {separator: '-'});
+//=> 'unicorn-rainbow'
+```
+
+##### preserveConsecutiveUppercase
 
 Type: `boolean`\
 Default: `false`
 
-Uppercase the first character as in `bye-bye` → `ByeBye`.
+Preserve sequences of uppercase characters.
 
-## camelcase-keys for enterprise
+```js
+const decamelize = require('decamelize');
 
-Available as part of the Tidelift Subscription.
+decamelize('testGUILabel');
+//=> 'test_gui_label'
 
-The maintainers of camelcase-keys and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/npm-camelcase-keys?utm_source=npm-camelcase-keys&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
-
+decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
+//=> 'test_GUI_label'
+```
 ## Related
 
-- [snakecase-keys](https://github.com/bendrucker/snakecase-keys)
-- [kebabcase-keys](https://github.com/mattiloh/kebabcase-keys)
-
+See [`camelcase-keys`](https://github.com/sindresorhus/camelcase-keys) for the inverse.

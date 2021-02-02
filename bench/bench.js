@@ -1,17 +1,17 @@
 /* globals bench suite set */
 'use strict';
-const camelcaseKeysNpm = require('camelcase-keys');
+const decamelizeeKeysNpm = require('@puuuuudding/decamelize-keys');
 const fixture = require('./fixture');
-const camelcaseKeys = require('..');
+const decamelizeKeys = require('..');
 
 suite('camelcaseKeys', () => {
 	set('mintime', 1000);
 
 	bench('npm', () => {
-		camelcaseKeysNpm(fixture, {deep: true});
+		decamelizeeKeysNpm(fixture, {deep: true});
 	});
 
 	bench('master', () => {
-		camelcaseKeys(fixture, {deep: true});
+		decamelizeKeys(fixture, {deep: true});
 	});
 });
