@@ -1,36 +1,40 @@
 import {expectType} from 'tsd';
-import camelcaseKeys = require('.');
+import decamelizeKeys = require('.');
 
-const fooBarObject = {'foo-bar': true};
-const camelFooBarObject = camelcaseKeys(fooBarObject);
-expectType<typeof fooBarObject>(camelFooBarObject);
+const fooBarObject = {fooBar: true};
+const decamelizedFooBarObject = decamelizeKeys(fooBarObject);
+expectType<typeof fooBarObject>(decamelizedFooBarObject);
 
-const fooBarArray = [{'foo-bar': true}];
-const camelFooBarArray = camelcaseKeys(fooBarArray);
-expectType<typeof fooBarArray>(camelFooBarArray);
+const fooBarArray = [{fooBar: true}];
+const decamelizedFooBarArray = decamelizeKeys(fooBarArray);
+expectType<typeof fooBarArray>(decamelizedFooBarArray);
 
-expectType<Array<{[key in 'foo-bar']: true}>>(camelcaseKeys([{'foo-bar': true}]));
+expectType<Array<{[key in 'fooBar']: true}>>(decamelizeKeys([{fooBar: true}]));
 
-expectType<string[]>(camelcaseKeys(['name 1', 'name 2']));
+expectType<string[]>(decamelizeKeys(['name 1', 'name 2']));
 
-expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
+expectType<string[]>(decamelizeKeys(['name 1', 'name 2'], {deep: true}));
 
-expectType<{[key in 'foo-bar']: true}>(camelcaseKeys({'foo-bar': true}));
+expectType<{[key in 'fooBar']: true}>(decamelizeKeys({fooBar: true}));
 
-expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {deep: true})
+expectType<{[key in 'fooBar']: true}>(
+	decamelizeKeys({fooBar: true}, {deep: true})
 );
 
-expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {deep: true, pascalCase: true})
+expectType<{[key in 'fooBar']: true}>(
+	decamelizeKeys({fooBar: true}, {deep: true, separator: '-'})
 );
 
-expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {exclude: ['foo', /bar/]})
+expectType<{[key in 'fooBar']: true}>(
+	decamelizeKeys({fooBar: true}, {deep: true, preserveConsecutiveUppercase: true})
 );
 
-expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {stopPaths: ['foo']})
+expectType<{[key in 'fooBar']: true}>(
+	decamelizeKeys({fooBar: true}, {exclude: ['foo', /bar/]})
+);
+
+expectType<{[key in 'fooBar']: true}>(
+	decamelizeKeys({fooBar: true}, {stopPaths: ['foo']})
 );
 
 interface SomeObject {
@@ -41,8 +45,8 @@ const someObject: SomeObject = {
 	someProperty: 'hello'
 };
 
-expectType<SomeObject>(camelcaseKeys(someObject));
-expectType<SomeObject[]>(camelcaseKeys([someObject]));
+expectType<SomeObject>(decamelizeKeys(someObject));
+expectType<SomeObject[]>(decamelizeKeys([someObject]));
 
 type SomeTypeAlias = {
 	someProperty: string;
@@ -52,5 +56,5 @@ const objectWithTypeAlias = {
 	someProperty: 'this should also work'
 };
 
-expectType<SomeTypeAlias>(camelcaseKeys(objectWithTypeAlias));
-expectType<SomeTypeAlias[]>(camelcaseKeys([objectWithTypeAlias]));
+expectType<SomeTypeAlias>(decamelizeKeys(objectWithTypeAlias));
+expectType<SomeTypeAlias[]>(decamelizeKeys([objectWithTypeAlias]));

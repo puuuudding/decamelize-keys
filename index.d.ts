@@ -1,4 +1,4 @@
-declare namespace camelcaseKeys {
+declare namespace decamelizeKeys {
 	interface Options {
 		/**
 		Recurse nested objects and objects in arrays.
@@ -8,39 +8,39 @@ declare namespace camelcaseKeys {
 		readonly deep?: boolean;
 
 		/**
-		Exclude keys from being camel-cased.
+		Exclude keys from being decamelized.
 
 		@default []
 		*/
 		readonly exclude?: ReadonlyArray<string | RegExp>;
 
 		/**
-		Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
+		Exclude children at the given object paths in dot-notation from being decamelize. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
 
 		@default []
 
 		@example
 		```
-		camelcaseKeys({
-			a_b: 1,
-			a_c: {
-				c_d: 1,
-				c_e: {
-					e_f: 1
+		decamelizeKeys({
+			aB: 1,
+			aC: {
+				cD: 1,
+				cE: {
+					eF: 1
 				}
 			}
 		}, {
 			deep: true,
 			stopPaths: [
-				'a_c.c_e'
+				'aC.cE'
 			]
 		}),
 		// {
-		// 	aB: 1,
-		// 	aC: {
-		// 		cD: 1,
-		// 		cE: {
-		// 			e_f: 1
+		// 	a_b: 1,
+		// 	a_c: {
+		// 		c_d: 1,
+		// 		c_e: {
+		// 			eF: 1
 		// 		}
 		// 	}
 		// }
@@ -49,55 +49,68 @@ declare namespace camelcaseKeys {
 		readonly stopPaths?: readonly string[];
 
 		/**
-		Uppercase the first character as in `bye-bye` → `ByeBye`.
+		Character or string inserted to separate words in key.
+		@default '_'
+		@example
+		```
+		import decamelize = require('decamelize');
+		decamelize('unicornRainbow');
+		//=> 'unicorn_rainbow'
+		decamelize('unicornRainbow', {separator: '-'});
+		//=> 'unicorn-rainbow'
+		```
+		 */
+		readonly separator?: string;
 
+		/**
+		Preserve sequences of uppercase characters.
 		@default false
-		*/
-		readonly pascalCase?: boolean;
+		@example
+		```
+		import decamelize = require('decamelize');
+		decamelize('testGUILabel');
+		//=> 'test_gui_label'
+		decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
+		//=> 'test_GUI_label'
+		```
+		 */
+		readonly preserveConsecutiveUppercase?: boolean;
 	}
 }
 
 /**
-Convert object keys to camel case using [`camelcase`](https://github.com/sindresorhus/camelcase).
+Convert object keys to lowercased one using [`decamelize`](https://github.com/sindresorhus/decamelize).
 
-@param input - Object or array of objects to camel-case.
+@param input - Object or array of objects to decamelize.
 
 @example
 ```
-import camelcaseKeys = require('camelcase-keys');
+const decamelizeKeys = require('decamelize-keys');
 
 // Convert an object
-camelcaseKeys({'foo-bar': true});
-//=> {fooBar: true}
+decamelizeKeys({fooBar: true});
+//=> {'foo_bar': true}
 
 // Convert an array of objects
-camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
-//=> [{fooBar: true}, {barFoo: false}]
+decamelizeKeys([{fooBar: true}, {barFoo: false}]);
+//=> [{'foo_bar': true}, {'bar_foo': false}]
 
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
-//=> {fooBar: true, nested: {unicornRainbow: true}}
+decamelizeKeys({fooBar: true, nested: {unicornRainbow: true}}, {deep: true});
+//=> {'foo_bar': true, nested: {'unicorn_rainbow': true}}
 
-// Convert object keys to pascal case
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
-//=> {FooBar: true, Nested: {UnicornRainbow: true}}
-
-import minimist = require('minimist');
-
-const argv = minimist(process.argv.slice(2));
-//=> {_: [], 'foo-bar': true}
-
-camelcaseKeys(argv);
-//=> {_: [], fooBar: true}
+// Use custom separator
+decamelizeKeys({fooBar: true, nested: {unicornRainbow: true}}, {deep: true, separator: '-'});
+//=> {'foo-bar': true, nested: {'unicorn-rainbow': true}}
 ```
 */
-declare function camelcaseKeys<T extends ReadonlyArray<Record<string, any>>>(
+declare function decamelizeKeys<T extends ReadonlyArray<Record<string, any>>>(
 	input: T,
-	options?: camelcaseKeys.Options,
+	options?: decamelizeKeys.Options,
 ): T;
 
-declare function camelcaseKeys<T extends Record<string, any>>(
+declare function decamelizeKeys<T extends Record<string, any>>(
 	input: T,
-	options?: camelcaseKeys.Options,
+	options?: decamelizeKeys.Options,
 ): T;
 
-export = camelcaseKeys;
+export = decamelizeKeys;

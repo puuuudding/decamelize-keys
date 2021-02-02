@@ -1,6 +1,6 @@
 'use strict';
 const mapObj = require('map-obj');
-const camelCase = require('camelcase');
+const decamelize = require('decamelize');
 const QuickLru = require('quick-lru');
 
 const has = (array, key) => array.some(x => {
@@ -22,18 +22,19 @@ const isObject = value =>
 	!(value instanceof Error) &&
 	!(value instanceof Date);
 
-const camelCaseConvert = (input, options) => {
+const decamelizeConvert = (input, options) => {
 	if (!isObject(input)) {
 		return input;
 	}
 
 	options = {
+		separator: '_',
+		preserveConsecutiveUppercase: false,
 		deep: false,
-		pascalCase: false,
 		...options
 	};
 
-	const {exclude, pascalCase, stopPaths, deep} = options;
+	const {exclude, stopPaths, deep, separator, preserveConsecutiveUppercase} = options;
 
 	const stopPathsSet = new Set(stopPaths);
 
@@ -47,12 +48,12 @@ const camelCaseConvert = (input, options) => {
 		}
 
 		if (!(exclude && has(exclude, key))) {
-			const cacheKey = pascalCase ? `${key}_` : key;
+			const cacheKey = `${key}${separator}${preserveConsecutiveUppercase ? 1 : 0}`;
 
 			if (cache.has(cacheKey)) {
 				key = cache.get(cacheKey);
 			} else {
-				const returnValue = camelCase(key, {pascalCase});
+				const returnValue = decamelize(key, {separator, preserveConsecutiveUppercase});
 
 				if (key.length < 100) { // Prevent abuse
 					cache.set(cacheKey, returnValue);
@@ -70,8 +71,8 @@ const camelCaseConvert = (input, options) => {
 
 module.exports = (input, options) => {
 	if (Array.isArray(input)) {
-		return Object.keys(input).map(key => camelCaseConvert(input[key], options));
+		return Object.keys(input).map(key => decamelizeConvert(input[key], options));
 	}
 
-	return camelCaseConvert(input, options);
+	return decamelizeConvert(input, options);
 };
